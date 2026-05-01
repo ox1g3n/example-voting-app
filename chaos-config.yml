@@ -1,0 +1,44 @@
+version: "1.0"
+project: "voting-app-chaos-demo"
+
+controller:
+  url: "http://localhost:5050"
+  timeout_seconds: 300
+
+thresholds:
+  latency_regression_percent: 50
+  max_5xx_rate_percent: 10
+  max_payload_crash_rate_percent: 0
+
+services:
+  - name: vote
+    probe_url: "http://vote:80/"
+
+  - name: result
+    probe_url: "http://result:80/"
+
+  - name: worker
+    probe_url: "http://worker:80/"
+
+tests:
+  - id: "latency-vote-service"
+    type: latency
+    target: vote
+    params:
+      delay_ms: 3000
+      num_requests: 5
+    on_fail: block
+
+  - id: "latency-result-service"
+    type: latency
+    target: result
+    params:
+      delay_ms: 2000
+      num_requests: 5
+    on_fail: warn
+
+report:
+  output_path: "chaos-report.html"
+  json_path: "chaos-report.json"
+  ai_summary: true
+  fail_on: "block"
