@@ -2,11 +2,12 @@ pipeline {
     agent any
 
     environment {
-        GEMINI_API_KEY   = credentials('gemini-api-key')
-        COMPOSE_FILE     = 'docker-compose.yml'
-        APP_NETWORK      = 'voting-app-chaos-demo_app-net'
-        CHAOS_IMAGE      = 'chaos-controller:latest'
-        CHAOS_CONTAINER  = 'chaos-controller-ci'
+        GEMINI_API_KEY       = credentials('gemini-api-key')
+        COMPOSE_PROJECT_NAME = 'voting-app-chaos-demo'
+        COMPOSE_FILE         = 'docker-compose.yml'
+        APP_NETWORK          = 'voting-app-chaos-demo_app-net'
+        CHAOS_IMAGE          = 'chaos-controller:latest'
+        CHAOS_CONTAINER      = 'chaos-controller-ci'
     }
 
     stages {
