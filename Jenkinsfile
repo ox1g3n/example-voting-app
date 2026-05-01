@@ -33,9 +33,12 @@ pipeline {
                         -e GEMINI_API_KEY=${GEMINI_API_KEY} \
                         ${CHAOS_IMAGE}
                 """
+                // Connect Jenkins container to the app network so it can reach
+                // ChaosController and voting app services by container name
+                sh "docker network connect ${APP_NETWORK} jenkins || true"
                 sh '''
                     for i in $(seq 1 30); do
-                        curl -sf http://localhost:5050/status > /dev/null && echo "ChaosController ready!" && exit 0
+                        curl -sf http://chaos-controller-ci:5050/status > /dev/null && echo "ChaosController ready!" && exit 0
                         echo "Waiting for ChaosController... ($i/30)"
                         sleep 5
                     done
@@ -50,7 +53,7 @@ pipeline {
                 echo '🏥 Verifying all services are healthy...'
                 sh '''
                     for i in $(seq 1 20); do
-                        curl -sf http://localhost:8082 > /dev/null && echo "Vote app healthy!" && exit 0
+                        curl -sf http://voting-app-chaos-demo-vote-1:80 > /dev/null && echo "Vote app healthy!" && exit 0
                         echo "Waiting for Vote app... ($i/20)"
                         sleep 5
                     done
