@@ -14,7 +14,7 @@ pipeline {
         stage('Build & Start Voting App') {
             steps {
                 echo '🔨 Building and starting the Voting App stack...'
-                sh "docker compose -f ${COMPOSE_FILE} up --build -d"
+                sh "docker-compose -f ${COMPOSE_FILE} up --build -d"
                 echo '✅ Voting App is building...'
             }
         }
@@ -108,7 +108,7 @@ pipeline {
             echo '🧹 Cleaning up...'
             sh "docker stop ${CHAOS_CONTAINER} 2>/dev/null || true"
             sh "docker rm ${CHAOS_CONTAINER} 2>/dev/null || true"
-            sh "docker compose -f ${COMPOSE_FILE} down 2>/dev/null || true"
+            sh "docker-compose -f ${COMPOSE_FILE} down 2>/dev/null || true"
         }
         failure {
             echo '❌ Pipeline failed or was rejected.'
