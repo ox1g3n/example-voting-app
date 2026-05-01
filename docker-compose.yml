@@ -2,7 +2,7 @@ services:
   vote:
     build:
       context: ./vote
-      target: dev
+      target: final
     depends_on:
       redis:
         condition: service_healthy
@@ -12,8 +12,6 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
-    volumes:
-     - ./vote:/usr/local/app
     ports:
       - "8082:80"
     networks:
@@ -24,12 +22,9 @@ services:
 
   result:
     build: ./result
-    entrypoint: nodemon --inspect=0.0.0.0 server.js
     depends_on:
       db:
         condition: service_healthy
-    volumes:
-      - ./result:/usr/local/app
     ports:
       - "8081:80"
     networks:
